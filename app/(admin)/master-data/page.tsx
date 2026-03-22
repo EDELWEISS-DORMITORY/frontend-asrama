@@ -16,6 +16,10 @@ type MasterDataRoutePageProps = {
   }>;
 };
 
+function resolveTabParam(tab?: string | string[]) {
+  return Array.isArray(tab) ? tab[0] : tab;
+}
+
 function normalizeMasterDataTab(tab: string | null): MasterDataTab {
   switch (tab) {
     case "kamar":
@@ -31,10 +35,9 @@ export async function generateMetadata({
   searchParams,
 }: MasterDataRoutePageProps): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
-  const tabParam = Array.isArray(resolvedSearchParams.tab)
-    ? resolvedSearchParams.tab[0]
-    : resolvedSearchParams.tab;
-  const activeTab = normalizeMasterDataTab(tabParam ?? null);
+  const activeTab = normalizeMasterDataTab(
+    resolveTabParam(resolvedSearchParams.tab) ?? null,
+  );
 
   return {
     title: `${masterDataTabTitles[activeTab]} | Master Data | SiMARA`,
@@ -45,10 +48,9 @@ export default async function MasterDataRoutePage({
   searchParams,
 }: MasterDataRoutePageProps) {
   const resolvedSearchParams = await searchParams;
-  const tabParam = Array.isArray(resolvedSearchParams.tab)
-    ? resolvedSearchParams.tab[0]
-    : resolvedSearchParams.tab;
-  const activeTab = normalizeMasterDataTab(tabParam ?? null);
+  const activeTab = normalizeMasterDataTab(
+    resolveTabParam(resolvedSearchParams.tab) ?? null,
+  );
 
   return <MasterDataPage initialTab={activeTab} />;
 }

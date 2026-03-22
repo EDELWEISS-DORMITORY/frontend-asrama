@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-type MasterDataTab = "mahasiswa" | "kamar" | "pelanggaran" | "aturan";
+export type MasterDataTab = "mahasiswa" | "kamar" | "pelanggaran" | "aturan";
 
 type MasterDataTabItem = {
   id: MasterDataTab;
@@ -12,13 +12,13 @@ type MasterDataTabItem = {
   count: string;
 };
 
-type MasterDataTabDetail = {
+export type MasterDataTabDetail = {
   heading: string;
   breadcrumb: string;
   addLabel: string;
 };
 
-const tabDetails: Record<MasterDataTab, MasterDataTabDetail> = {
+export const masterDataTabDetails: Record<MasterDataTab, MasterDataTabDetail> = {
   mahasiswa: {
     heading: "Data Mahasiswa",
     breadcrumb: "Data Mahasiswa",
@@ -41,6 +41,7 @@ const tabDetails: Record<MasterDataTab, MasterDataTabDetail> = {
   },
 };
 
+
 const activeTabButtonClass =
   "tab-btn flex items-center gap-2.5 px-5 py-4 text-sm font-semibold border-b-2 whitespace-nowrap shrink-0 border-indigo-600 text-indigo-600 bg-indigo-50/60";
 
@@ -56,29 +57,33 @@ const inactiveTabBadgeClass =
 const tabs: MasterDataTabItem[] = [
   {
     id: "mahasiswa",
-    label: tabDetails.mahasiswa.heading,
+    label: masterDataTabDetails.mahasiswa.heading,
     icon: "fa-solid fa-user-graduate",
     count: "247",
   },
   {
     id: "kamar",
-    label: tabDetails.kamar.heading,
+    label: masterDataTabDetails.kamar.heading,
     icon: "fa-solid fa-door-open",
     count: "45",
   },
   {
     id: "pelanggaran",
-    label: tabDetails.pelanggaran.heading,
+    label: masterDataTabDetails.pelanggaran.heading,
     icon: "fa-solid fa-triangle-exclamation",
     count: "5",
   },
   {
     id: "aturan",
-    label: tabDetails.aturan.heading,
+    label: masterDataTabDetails.aturan.heading,
     icon: "fa-solid fa-scale-balanced",
     count: "4",
   },
 ];
+
+export function getMasterDataTabDetail(tab: MasterDataTab) {
+  return masterDataTabDetails[tab];
+}
 
 export function normalizeMasterDataTab(tab: string | null): MasterDataTab {
   switch (tab) {
@@ -3888,7 +3893,7 @@ export function MasterDataPage({
   const pathname = usePathname();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<MasterDataTab>(initialTab);
-  const activeTabDetail = tabDetails[activeTab];
+  const activeTabDetail = getMasterDataTabDetail(activeTab);
 
   useEffect(() => {
     setActiveTab(initialTab);

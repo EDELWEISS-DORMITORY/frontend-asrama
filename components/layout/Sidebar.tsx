@@ -17,16 +17,16 @@ const asideClass =
   "fixed top-0 left-0 h-screen w-64 bg-slate-900 flex flex-col z-30 -translate-x-full lg:translate-x-0";
 
 const primaryLinkClass =
-  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:bg-slate-800 transition-colors";
+  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors";
 
 const primaryLinkActiveClass =
-  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-600 text-slate-400 shadow-lg shadow-indigo-900/30";
+  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-900/30";
 
 const dropdownButtonActiveClass =
-  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-600 text-slate-400 active-nav-glow";
+  "nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-900/30";
 
 const dropdownChildClass =
-  "flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-slate-400 hover:bg-slate-800 transition-colors";
+  "flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs text-slate-400 hover:bg-slate-800 hover:text-white transition-colors";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -81,7 +81,7 @@ export function Sidebar({
           <div key={section.heading}>
             <p
               className={cx(
-                "text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 pb-2.5",
+                "text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 pb-2.5",
                 sectionIndex > 0 && "pt-4",
               )}
             >
@@ -140,7 +140,7 @@ export function Sidebar({
                     <i
                       className={cx(
                         "fa-solid fa-chevron-down text-[11px] ml-auto arrow-icon",
-                        "text-slate-400",
+                        "text-slate-500",
                         isExpanded && "rotated",
                       )}
                     />
@@ -159,7 +159,7 @@ export function Sidebar({
                         className={dropdownChildClass}
                         onClick={onClose}
                       >
-                        <span className="text-slate-400">•</span>
+                        <span className="text-slate-500">•</span>
                         <span>{child.label}</span>
                       </Link>
                     ))}
