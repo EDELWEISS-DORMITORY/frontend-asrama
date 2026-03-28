@@ -7,6 +7,7 @@ export type AdminDropdownId =
 type RouteMatch = {
   href: string;
   mode?: "exact" | "prefix";
+  query?: Record<string, string>;
 };
 
 export type AdminPageMeta = {
@@ -152,22 +153,22 @@ export const sidebarSections: SidebarSection[] = [
           {
             label: "Data Mahasiswa",
             href: "/master-data?tab=mahasiswa",
-            match: { href: "/master-data" },
+            match: { href: "/master-data", query: { tab: "mahasiswa" } },
           },
           {
             label: "Data Kamar",
             href: "/master-data?tab=kamar",
-            match: { href: "/master-data/kamar" },
+            match: { href: "/master-data", query: { tab: "kamar" } },
           },
           {
             label: "Jenis Pelanggaran",
             href: "/master-data?tab=pelanggaran",
-            match: { href: "/master-data/pelanggaran" },
+            match: { href: "/master-data", query: { tab: "pelanggaran" } },
           },
           {
             label: "Aturan Poin",
             href: "/master-data?tab=aturan",
-            match: { href: "/master-data/aturan-poin" },
+            match: { href: "/master-data", query: { tab: "aturan" } },
           },
         ],
       },
@@ -185,23 +186,23 @@ export const sidebarSections: SidebarSection[] = [
         items: [
           {
             label: "Form Pendaftaran",
-            href: "/pendaftaran#form",
-            match: { href: "/pendaftaran" },
+            href: "/pendaftaran?tab=form",
+            match: { href: "/pendaftaran", query: { tab: "form" } },
           },
           {
             label: "Daftar Pendaftar",
-            href: "/pendaftaran#daftar",
-            match: { href: "/pendaftaran/daftar" },
+            href: "/pendaftaran?tab=daftar",
+            match: { href: "/pendaftaran", query: { tab: "daftar" } },
           },
           {
             label: "Verifikasi",
-            href: "/pendaftaran#verifikasi",
-            match: { href: "/pendaftaran/verifikasi" },
+            href: "/pendaftaran?tab=verifikasi",
+            match: { href: "/pendaftaran", query: { tab: "verifikasi" } },
           },
           {
             label: "Riwayat Pendaftaran",
-            href: "/pendaftaran#riwayat",
-            match: { href: "/pendaftaran/riwayat" },
+            href: "/pendaftaran?tab=riwayat",
+            match: { href: "/pendaftaran", query: { tab: "riwayat" } },
           },
         ],
       },
@@ -214,28 +215,28 @@ export const sidebarSections: SidebarSection[] = [
         items: [
           {
             label: "Daftar Penghuni",
-            href: "/penghuni-asrama#daftar",
-            match: { href: "/penghuni-asrama" },
+            href: "/penghuni-asrama?tab=daftar",
+            match: { href: "/penghuni-asrama", query: { tab: "daftar" } },
           },
           {
             label: "Detail Penghuni",
-            href: "/penghuni-asrama#detail",
-            match: { href: "/penghuni-asrama/detail" },
+            href: "/penghuni-asrama?tab=detail",
+            match: { href: "/penghuni-asrama", query: { tab: "detail" } },
           },
           {
             label: "Penempatan Kamar",
-            href: "/penghuni-asrama#penempatan",
-            match: { href: "/penghuni-asrama/penempatan" },
+            href: "/penghuni-asrama?tab=penempatan",
+            match: { href: "/penghuni-asrama", query: { tab: "penempatan" } },
           },
           {
             label: "Mutasi Kamar",
-            href: "/penghuni-asrama#mutasi",
-            match: { href: "/penghuni-asrama/mutasi" },
+            href: "/penghuni-asrama?tab=mutasi",
+            match: { href: "/penghuni-asrama", query: { tab: "mutasi" } },
           },
           {
             label: "Keluar Asrama",
-            href: "/penghuni-asrama#keluar",
-            match: { href: "/penghuni-asrama/keluar" },
+            href: "/penghuni-asrama?tab=keluar",
+            match: { href: "/penghuni-asrama", query: { tab: "keluar" } },
           },
         ],
       },
@@ -248,23 +249,23 @@ export const sidebarSections: SidebarSection[] = [
         items: [
           {
             label: "Jadwal Check Point",
-            href: "/check-point#jadwal",
-            match: { href: "/check-point" },
+            href: "/check-point?tab=jadwal",
+            match: { href: "/check-point", query: { tab: "jadwal" } },
           },
           {
             label: "Input Kehadiran",
-            href: "/check-point#input",
-            match: { href: "/check-point/input" },
+            href: "/check-point?tab=input",
+            match: { href: "/check-point", query: { tab: "input" } },
           },
           {
             label: "Hasil Check Point",
-            href: "/check-point#hasil",
-            match: { href: "/check-point/hasil" },
+            href: "/check-point?tab=hasil",
+            match: { href: "/check-point", query: { tab: "hasil" } },
           },
           {
             label: "Pelanggaran CP",
-            href: "/check-point#pelanggaran",
-            match: { href: "/check-point/pelanggaran" },
+            href: "/check-point?tab=pelanggaran",
+            match: { href: "/check-point", query: { tab: "pelanggaran" } },
           },
         ],
       },
@@ -298,12 +299,40 @@ export const sidebarSections: SidebarSection[] = [
   },
 ];
 
-export function isRouteMatch(pathname: string, match: RouteMatch) {
+import type { ReadonlyURLSearchParams } from "next/navigation";
+
+export function isRouteMatch(
+  pathname: string,
+  match: RouteMatch,
+  searchParams?: ReadonlyURLSearchParams | null
+) {
+  let isPathMatch = false;
   if (match.mode === "prefix") {
-    return pathname.startsWith(match.href);
+    isPathMatch = pathname.startsWith(match.href);
+  } else {
+    isPathMatch = pathname === match.href;
   }
 
-  return pathname === match.href;
+  if (!isPathMatch) return false;
+
+  if (match.query) {
+    let currentTab = searchParams?.get("tab");
+    if (!currentTab) {
+      if (pathname.startsWith("/master-data")) currentTab = "mahasiswa";
+      else if (pathname.startsWith("/pendaftaran")) currentTab = "form";
+      else if (pathname.startsWith("/penghuni-asrama")) currentTab = "daftar";
+      else if (pathname.startsWith("/check-point")) currentTab = "jadwal";
+    }
+    for (const [key, value] of Object.entries(match.query)) {
+      if (key === "tab") {
+        if (currentTab !== value) return false;
+      } else if (searchParams?.get(key) !== value) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 export function getAdminPageMeta(pathname: string) {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   getDefaultOpenDropdown,
   isRouteMatch,
@@ -45,6 +45,7 @@ export function Sidebar({
   onToggleDropdown,
 }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const defaultOpenDropdown = getDefaultOpenDropdown(pathname);
   const resolvedOpenDropdown = openDropdown ?? defaultOpenDropdown;
 
@@ -94,7 +95,7 @@ export function Sidebar({
                   const isActive =
                     item.href === "/dashboard"
                       ? pathname === "/" || pathname === "/dashboard"
-                      : isRouteMatch(pathname, item.match);
+                      : isRouteMatch(pathname, item.match, searchParams);
 
                   return (
                     <Link
@@ -118,7 +119,7 @@ export function Sidebar({
                   );
                 }
 
-                const isActive = isRouteMatch(pathname, item.match);
+                const isActive = isRouteMatch(pathname, item.match, searchParams);
                 const isExpanded = resolvedOpenDropdown === item.id || isActive;
 
                 return (
@@ -154,7 +155,7 @@ export function Sidebar({
                       )}
                     >
                       {item.items.map((child) => {
-                        const childActive = isRouteMatch(pathname, child.match);
+                        const childActive = isRouteMatch(pathname, child.match, searchParams);
                         return (
                           <Link
                             key={child.label}

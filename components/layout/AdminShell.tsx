@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
@@ -53,12 +53,21 @@ export function AdminShell({
         aria-hidden="true"
       />
 
-      <Sidebar
-        isOpen={isSidebarOpen}
-        openDropdown={openDropdown}
-        onClose={() => setIsSidebarOpen(false)}
-        onToggleDropdown={toggleDropdown}
-      />
+      <Suspense
+        fallback={
+          <div
+            className="fixed top-0 left-0 hidden h-screen w-64 border-r border-slate-200 bg-white lg:block"
+            aria-hidden="true"
+          />
+        }
+      >
+        <Sidebar
+          isOpen={isSidebarOpen}
+          openDropdown={openDropdown}
+          onClose={() => setIsSidebarOpen(false)}
+          onToggleDropdown={toggleDropdown}
+        />
+      </Suspense>
 
       <div className="lg:ml-64 min-h-screen flex flex-col">
         <Header
